@@ -20,13 +20,14 @@ if '%errorlevel%' NEQ '0' (
 
 :gotAdmin
 cls
-echo Deleting Roblox cookies file...
-set "RobloxCookies=%USERPROFILE%\AppData\Local\Roblox\LocalStorage\RobloxCookies.dat"
-if exist "%RobloxCookies%" (
-    del /q /s /f "%RobloxCookies%"
-    echo Roblox cookies file deleted successfully.
+echo Deleting all files in Roblox LocalStorage directory...
+set "RobloxLocalStorage=%USERPROFILE%\AppData\Local\Roblox\LocalStorage"
+
+if exist "%RobloxLocalStorage%" (
+    del /q /f "%RobloxLocalStorage%\*" 2>nul
+    echo All files in LocalStorage directory deleted successfully.
 ) else (
-    echo No Roblox cookies file found.
+    echo Roblox LocalStorage directory not found.
 )
 
 echo Press any key to close . . .

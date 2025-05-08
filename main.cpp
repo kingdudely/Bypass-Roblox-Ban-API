@@ -1,35 +1,21 @@
-// #define _CRT_SECURE_NO_WARNINGS
-
 #include <iostream>
 #include <filesystem>
 #include <string>
-#include <conio.h> // just for _getch bro
+#include <conio.h>
 
 using namespace std;
 using namespace filesystem;
 
 int main() {
     try {
-        /*
-        char* userPath = getenv("USERPROFILE");
-        if (!userPath) {
-            cerr << "Failed to retrieve USERPROFILE environment variable." << endl;
-            return 1;
-        }
-        */
-
-        /*
-        Instead of just getenv("USERPROFILE") I have to do all this because it's "deprecated"???
-        */
-
-        char* userPath = nullptr;
-        if (_dupenv_s(&userPath, nullptr, "USERPROFILE") || !userPath) {
-            cerr << "Failed to retrieve USERPROFILE environment variable." << endl;
+        char* localAppData = nullptr;
+        if (_dupenv_s(&localAppData, nullptr, "LOCALAPPDATA") || !localAppData) {
+            cerr << "Failed to retrieve LOCALAPPDATA environment variable." << endl;
             return 1;
         }
 
-        path localStoragePath = path(userPath) / "AppData" / "Local" / "Roblox" / "LocalStorage";
-        free(userPath);
+        path localStoragePath = path(localAppData) / "Roblox" / "LocalStorage";
+        free(localAppData);
 
         if (exists(localStoragePath) && is_directory(localStoragePath)) {
             for (const auto& entry : recursive_directory_iterator(localStoragePath)) {
@@ -37,8 +23,8 @@ int main() {
                     remove_all(entry.path());
                     cout << "Deleted: " << entry.path() << endl;
                 }
-                catch (const exception& e) {
-                    cerr << "Error deleting file " << entry.path() << ": " << e.what() << endl;
+                catch (const exception& error) {
+                    cerr << "Error deleting file " << entry.path() << ": " << error.what() << endl;
                 }
             }
 
@@ -48,8 +34,8 @@ int main() {
             cerr << "Roblox LocalStorage directory not found." << endl;
         }
     }
-    catch (const exception& e) {
-        cerr << "Error: " << e.what() << endl;
+    catch (const exception& error) {
+        cerr << "Error: " << error.what() << endl;
     }
 
     cout << "Press any key to close . . .";
